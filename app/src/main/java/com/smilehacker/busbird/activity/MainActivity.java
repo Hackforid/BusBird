@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         mTvDestinationTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MapChooseDestinationActivity.class);
+                Intent intent = new Intent(MainActivity.this, DestinationListActivity.class);
                 startActivity(intent);
             }
         });

@@ -6,6 +6,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kleist on 15/3/11.
@@ -31,7 +32,7 @@ public class Destination extends Model {
         return destination;
     }
 
-    public static ArrayList<Destination> getAll() {
+    public static List<Destination> getAll() {
         return new Select().from(Destination.class)
                 .execute();
     }

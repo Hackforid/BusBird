@@ -34,5 +34,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.google.code.gson:gson:2.3'
-    compile 'com.jakewharton:butterknife:5.1.2'
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
 }

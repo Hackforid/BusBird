@@ -1,5 +1,7 @@
 package com.smilehacker.busbird.activity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.smilehacker.busbird.R;
 import com.smilehacker.busbird.adapter.SearchSuggestionRvAdapter;
+import com.smilehacker.busbird.app.Constants;
 
 import java.util.ArrayList;
 
@@ -94,18 +97,7 @@ public class MapChooseDestinationActivity extends BaseActivity implements Locati
         mBtnSetTarget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSelectedPoiItem != null) {
-                    Log.i(TAG, "PoiItem" + mSelectedPoiItem.getTitle() + " "
-                            + mSelectedPoiItem.getAdName() + " "
-                            + mSelectedPoiItem.getDistance() + " "
-                            + mSelectedPoiItem.getAdName() + " "
-                            + mSelectedPoiItem.getEmail() + " "
-                            + mSelectedPoiItem.getProvinceName() + " "
-                            + mSelectedPoiItem.getSnippet() + " "
-                            + mSelectedPoiItem.getTypeDes() + " "
-                            + mSelectedPoiItem.getWebsite() + " "
-                            + mSelectedPoiItem.getDirection());
-                }
+                saveDestination();
             }
         });
     }
@@ -173,9 +165,6 @@ public class MapChooseDestinationActivity extends BaseActivity implements Locati
                 }
 
                 ArrayList<PoiItem> poiItems = poiResult.getPois();
-//                for (PoiItem item : poiItems) {
-//                    Log.i(TAG, item.toString());
-//                }
 
                 mRlSuggestion.setVisibility(View.VISIBLE);
                 mSearchSuggestionRvAdapter.setPoiItems(poiItems);
@@ -190,6 +179,42 @@ public class MapChooseDestinationActivity extends BaseActivity implements Locati
 
         poiSearch.searchPOIAsyn();
 
+    }
+
+    private void saveDestination() {
+        if (mSelectedPoiItem != null) {
+            Log.i(TAG, "PoiItem" + mSelectedPoiItem.getTitle() + " "
+                    + mSelectedPoiItem.getAdName() + " "
+                    + mSelectedPoiItem.getDistance() + " "
+                    + mSelectedPoiItem.getAdName() + " "
+                    + mSelectedPoiItem.getEmail() + " "
+                    + mSelectedPoiItem.getProvinceName() + " "
+                    + mSelectedPoiItem.getSnippet() + " "
+                    + mSelectedPoiItem.getTypeDes() + " "
+                    + mSelectedPoiItem.getWebsite() + " "
+                    + mSelectedPoiItem.getDirection());
+
+            //saveMapShot();
+            deliverResult();
+        }
+    }
+
+    private void saveMapShot() {
+        mAMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
+            @Override
+            public void onMapScreenShot(Bitmap bitmap) {
+
+            }
+        });
+    }
+
+    private void deliverResult() {
+        Intent result = new Intent();
+        result.putExtra(Constants.KEY_DESTINATION_TITLE, mSelectedPoiItem.getTitle());
+        result.putExtra(Constants.KEY_DESTINATION_LAT, mSelectedPoiItem.getLatLonPoint().getLatitude());
+        result.putExtra(Constants.KEY_DESTINATION_LON, mSelectedPoiItem.getLatLonPoint().getLongitude());
+        setResult(RESULT_OK, result);
+        finish();
     }
 
     protected void onResume() {
