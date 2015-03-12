@@ -25,6 +25,7 @@ public class DestinationListAdapter extends RecyclerView.Adapter<DestinationList
     private List<Destination> mDestinations;
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
+    private OnItemClickListener mOnItemClickListener;
 
     public DestinationListAdapter(Context context) {
         mDestinations = new ArrayList<>();
@@ -44,9 +45,17 @@ public class DestinationListAdapter extends RecyclerView.Adapter<DestinationList
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Destination destination = mDestinations.get(position);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Destination destination = mDestinations.get(position);
         holder.tvTitle.setText(destination.title);
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(position, destination);
+                }
+            }
+        });
     }
 
     @Override
@@ -61,9 +70,21 @@ public class DestinationListAdapter extends RecyclerView.Adapter<DestinationList
         @InjectView(R.id.tv_title)
         TextView tvTitle;
 
+        public View view;
+
+
         ViewHolder(View view) {
             super(view);
             ButterKnife.inject(this, view);
+            this.view = view;
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClick(int pos, Destination destination);
     }
 }

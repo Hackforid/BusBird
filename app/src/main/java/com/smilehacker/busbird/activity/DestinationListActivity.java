@@ -11,6 +11,7 @@ import com.smilehacker.busbird.R;
 import com.smilehacker.busbird.adapter.DestinationListAdapter;
 import com.smilehacker.busbird.app.Constants;
 import com.smilehacker.busbird.model.Destination;
+import com.smilehacker.busbird.tools.DLog;
 
 import java.util.ArrayList;
 
@@ -47,16 +48,29 @@ public class DestinationListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DestinationListActivity.this, MapChooseDestinationActivity.class);
-                startActivityForResult(intent, Constants.REQUEST_CHOOSE_DESTINATION);
+                startActivityForResult(intent, Constants.REQUEST_CHOOSE_NEW_DESTINATION);
             }
         });
 
         mRvDes.setLayoutManager(new LinearLayoutManager(this));
         mRvDes.setAdapter(mDestinationAdapter);
+
+        mDestinationAdapter.setOnItemClickListener(new DestinationListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int pos, Destination destination) {
+                Intent result = new Intent();
+                result.putExtra(Constants.KEY_DESTINATION_ID, destination.getId());
+                setResult(RESULT_OK, result);
+                finish();
+            }
+        });
     }
 
     private void loadData() {
         ArrayList<Destination> destinations = (ArrayList<Destination>) Destination.getAll();
+        for (Destination des : destinations) {
+            DLog.i("des:" + des.getId() + " " + des.title);
+        }
         mDestinationAdapter.setDestinations(destinations);
     }
 
@@ -64,7 +78,7 @@ public class DestinationListActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case Constants.REQUEST_CHOOSE_DESTINATION:
+            case Constants.REQUEST_CHOOSE_NEW_DESTINATION:
                 if (resultCode == RESULT_OK) {
                     saveDestination(data);
                 }
@@ -77,7 +91,8 @@ public class DestinationListActivity extends BaseActivity {
         double lat = data.getDoubleExtra(Constants.KEY_DESTINATION_LAT, 0);
         double lon = data.getDoubleExtra(Constants.KEY_DESTINATION_LON, 0);
 
-        Destination.add(title, lat, lon);
+        Destination.add(title, title, lat, lon);
         loadData();
     }
+
 }

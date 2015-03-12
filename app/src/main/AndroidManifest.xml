@@ -39,6 +39,7 @@
         <activity android:name=".activity.MapChooseDestinationActivity"
                   android:theme="@style/AppTheme.Index"
             />
+        <service android:name=".service.LocationService"/>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
